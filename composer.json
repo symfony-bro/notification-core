@@ -1,0 +1,27 @@
+{
+    "name" : "symfony-bro/notification-core",
+    "description" : "Schedule bundle",
+    "type" : "symfony-bundle",
+    "authors" : [{
+        "name" : "Artem Dekhtyar",
+        "email" : "m@artemd.ru"
+    },{
+        "name" : "Pavel Stepanets",
+        "email" : "pahhan.ne@gmail.com"
+    }],
+    "keywords" : [
+        "schedule",
+        "symfony bundle"
+    ],
+    "require" : {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.1"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "SymfonyBro\\NotificationCore" : "src/"
+        }
+    }
+}

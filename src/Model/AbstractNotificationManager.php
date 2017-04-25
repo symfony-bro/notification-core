@@ -7,6 +7,8 @@
 namespace SymfonyBro\NotificationCore\Model;
 
 
+use Exception;
+
 abstract class AbstractNotificationManager implements NotificationManagerInterface
 {
     /**
@@ -14,23 +16,46 @@ abstract class AbstractNotificationManager implements NotificationManagerInterfa
      */
     public function notify(NotificationInterface $notification)
     {
-        $driver = $this->createDriver($notification);
-
         $this->beforeFormat($notification);
-        $formatter = $this->createFormatter($notification);
+        $formatters = $this->createFormatters($notification);
+        foreach ($formatters as $formatter) {
+            try {
+                $message = $formatter->format($notification);
+            } catch (Exception $exception) {
+                $this->onFormatException($notification, $exception);
+            }
 
-        $message = $formatter->format($notification);
+            try {
+                $driver = $this->createDriver($message);
+            } catch (Exception $exception) {
+                $this->onDriverCreateException($notification, $message, $exception);
+            }
 
-        $this->beforeSend($message);
-        $driver->send($message);
+            try {
+                $this->beforeSend($message);
+                $driver->send($message);
+            } catch (Exception $exception) {
+                $this->onSendException($notification, $message, $exception);
+            }
+        }
     }
 
-    abstract protected function createDriver(NotificationInterface $notification): DriverInterface;
+    abstract protected function createDriver(MessageInterface $message): DriverInterface;
 
-    abstract protected function createFormatter(NotificationInterface $notification): FormatterInterface;
+    /**
+     * @param NotificationInterface $notification
+     * @return FormatterInterface[]
+     */
+    abstract protected function createFormatters(NotificationInterface $notification): array;
 
     protected function beforeFormat(NotificationInterface $notification) {}
 
     protected function beforeSend(MessageInterface $message) {}
+
+    protected function onFormatException(NotificationInterface $notification, Exception $exception) {}
+
+    protected function onDriverCreateException(NotificationInterface $notification, MessageInterface $message, Exception $exception) {}
+
+    protected function onSendException(NotificationInterface $notification, MessageInterface $message, Exception $exception) {}
 
 }
