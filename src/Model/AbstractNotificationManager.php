@@ -23,12 +23,14 @@ abstract class AbstractNotificationManager implements NotificationManagerInterfa
                 $message = $formatter->format($notification);
             } catch (Exception $exception) {
                 $this->onFormatException($notification, $exception);
+                continue;
             }
 
             try {
                 $driver = $this->createDriver($message);
             } catch (Exception $exception) {
                 $this->onDriverCreateException($notification, $message, $exception);
+                continue;
             }
 
             try {
