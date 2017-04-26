@@ -1,7 +1,7 @@
 {
     "name" : "symfony-bro/notification-core",
     "description" : "Schedule bundle",
-    "type" : "symfony-bundle",
+    "type" : "library",
     "authors" : [{
         "name" : "Artem Dekhtyar",
         "email" : "m@artemd.ru"
@@ -10,8 +10,7 @@
         "email" : "pahhan.ne@gmail.com"
     }],
     "keywords" : [
-        "schedule",
-        "symfony bundle"
+        "notification"
     ],
     "require" : {
         "php": ">=7.0"
