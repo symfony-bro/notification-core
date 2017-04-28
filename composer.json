@@ -20,7 +20,7 @@
     },
     "autoload" : {
         "psr-4" : {
-            "SymfonyBro\\NotificationCore" : "src/"
+            "SymfonyBro\\NotificationCore\\" : "src/"
         }
     }
 }
