@@ -1,39 +1,43 @@
 <?php
-
-namespace SymfonyBro\NotificationCore\Driver\Slack;
-
 /**
- * Class SlackClient
- *
- * @package SymfonyBro\NotificationCore\Driver\Slack
  * @author Artem Dekhtyar <m@artemd.ru>
  * @author Pavel Stepanets <pahhan.ne@gmail.com>
  */
-class SlackClient
+
+
+namespace SymfonyBro\NotificationCore\Driver\Telegram;
+
+/**
+ * Class TelegramClient
+ * @package SymfonyBro\NotificationCore\Driver\Telegram
+ */
+class TelegramClient
 {
     /**
      * @var string
      */
-    private $api_endpoint;
+    private $endpoint;
 
     /**
-     * SlackClient constructor.
+     * TelegramClient constructor.
      * @param string $endpoint
      */
-    public function __construct($endpoint = 'https://slack.com/api')
+    public function __construct($endpoint = 'https://api.telegram.org/bot<token>/<method>')
     {
-        $this->api_endpoint = trim($endpoint, '/') . '/<method>';
+        $this->endpoint = $endpoint;
     }
 
     /**
+     * @param $token
      * @param $method
      * @param array $args
      * @param int $timeout
      * @return bool|mixed
      */
-    public function call($method, array $args = [], $timeout = 10)
+    public function call($token, $method, array $args = [], $timeout = 10)
     {
-        $url = str_replace('<method>', $method, $this->api_endpoint);
+        $url = str_replace(['<method>', '<token>'], [$method, $token], $this->endpoint);
+
         if (function_exists('curl_version')) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);

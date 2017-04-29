@@ -31,7 +31,7 @@ class SlackDriverTest extends TestCase
         $client = $this->getMockBuilder(SlackClient::class)
             ->getMock();
         $client->method('call')
-            ->willReturn(['ok' => false]);
+            ->willReturn(['ok'=>false]);
 
         $driver = new SlackDriver($client);
         $notification = $this->getMockForAbstractClass(NotificationInterface::class);
@@ -51,10 +51,11 @@ class SlackDriverTest extends TestCase
         $client->expects($this->once())
             ->method('call')
             ->with('chat.postMessage', $message->getMessage())
-            ->willReturn(['ok' => true]);
+            ->willReturn(['ok'=>true]);
 
         $driver = new SlackDriver($client);
 
         $driver->send($message);
+
     }
 }
