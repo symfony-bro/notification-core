@@ -35,7 +35,7 @@ class SlackDriver extends AbstractDriver
     {
         $result = $this->client->call($message->getMethod(), $message->getMessage());
         if (!$result['ok']) {
-            throw new \InvalidArgumentException($result['error']);
+            throw new \InvalidArgumentException($result['error'] ?? 'Unknown error occurred.');
         }
     }
 }

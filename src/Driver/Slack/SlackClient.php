@@ -11,19 +11,16 @@ namespace SymfonyBro\NotificationCore\Driver\Slack;
  */
 class SlackClient
 {
-    private $api_token;
     private $api_endpoint;
 
-    public function __construct($api_token, $endpoint = 'https://slack.com/api')
+    public function __construct($endpoint = 'https://slack.com/api')
     {
-        $this->api_token = $api_token;
         $this->api_endpoint = trim($endpoint, '/') . '/<method>';
     }
 
     public function call($method, $args = array(), $timeout = 10)
     {
         $url = str_replace('<method>', $method, $this->api_endpoint);
-        $args['token'] = $this->api_token;
         if (function_exists('curl_version')) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);

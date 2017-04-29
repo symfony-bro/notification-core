@@ -29,18 +29,13 @@ class SlackMessage extends AbstractMessage
      * SlackMessage constructor.
      * @param NotificationInterface $notification
      * @param string $token
-     * @param array $payload
      * @param string $method
      */
 
-    public function __construct(NotificationInterface $notification, string $token, array $payload = [], $method = 'chat.postMessage')
+    public function __construct(NotificationInterface $notification, string $token, $method = 'chat.postMessage')
     {
         parent::__construct($notification);
         $this->method = $method;
-
-        if (!empty($payload)) {
-            $this->payload = $payload;
-        }
 
         $this->payload['token'] = $token;
     }
