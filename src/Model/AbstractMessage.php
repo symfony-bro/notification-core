@@ -1,4 +1,5 @@
 <?php
+
 namespace SymfonyBro\NotificationCore\Model;
 
 /**
@@ -12,6 +13,11 @@ abstract class AbstractMessage implements MessageInterface
      */
     private $notification;
 
+    /**
+     * @var mixed
+     */
+    private $result;
+
     public function __construct(NotificationInterface $notification)
     {
         $this->notification = $notification;
@@ -23,5 +29,15 @@ abstract class AbstractMessage implements MessageInterface
     public function getNotification(): NotificationInterface
     {
         return $this->notification;
+    }
+
+    public function setResult($result)
+    {
+        $this->result = $result;
+    }
+
+    public function getResult()
+    {
+        return $this->result;
     }
 }

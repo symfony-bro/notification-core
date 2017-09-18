@@ -13,4 +13,14 @@ namespace SymfonyBro\NotificationCore\Model;
 interface MessageInterface
 {
     public function getNotification(): NotificationInterface;
+
+    /**
+     * @param mixed $result
+     */
+    public function setResult($result);
+
+    /**
+     * @return mixed
+     */
+    public function getResult();
 }
