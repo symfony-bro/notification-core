@@ -36,6 +36,7 @@ abstract class AbstractNotificationManager implements NotificationManagerInterfa
             try {
                 $this->beforeSend($message);
                 $driver->send($message);
+                $this->afterSend($message);
             } catch (Exception $exception) {
                 $this->onSendException($notification, $message, $exception);
             }
@@ -53,6 +54,8 @@ abstract class AbstractNotificationManager implements NotificationManagerInterfa
     protected function beforeFormat(NotificationInterface $notification) {}
 
     protected function beforeSend(MessageInterface $message) {}
+
+    protected function afterSend(MessageInterface $message) {}
 
     protected function onFormatException(NotificationInterface $notification, Exception $exception) {}
 
