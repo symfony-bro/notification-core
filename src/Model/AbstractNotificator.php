@@ -81,5 +81,5 @@ abstract class AbstractNotificator implements NotificatorInterface
 
     protected function onNotifyException(Throwable $e, NotificationInterface $notification) {}
 
-    private function onBuildException(Throwable $e, ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
+    protected function onBuildException(Throwable $e, ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
 }
