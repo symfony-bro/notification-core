@@ -50,17 +50,26 @@ class AbstractNotificatorTest extends TestCase
             ->with($context)
             ->willReturn($templates);
 
-        $builder->expects($this->exactly(count($recipients) * count($templates)))
+        $count = count($recipients) * count($templates);
+
+        $builder->expects($this->exactly($count))
             ->method('build')
             ->willReturn($notification);
 
-        $manager->expects($this->exactly(count($recipients) * count($templates)))
+        $manager->expects($this->exactly($count))
             ->method('notify')
             ->with($notification);
 
-        $notifier = new class($recipientFinder, $templateFinder, $builder, $manager) extends AbstractNotificator {
+        $notifier = $this->getMockBuilder(AbstractNotificator::class)
+            ->setConstructorArgs([$recipientFinder, $templateFinder, $builder, $manager])
+            ->setMethods(['afterNotify', 'beforeNotify'])
+            ->getMockForAbstractClass()
+        ;
+        $notifier->expects($this->exactly($count))
+            ->method('afterNotify');
 
-        };
+        $notifier->expects($this->exactly($count))
+            ->method('beforeNotify');
 
         $notifier->notify($context);
     }

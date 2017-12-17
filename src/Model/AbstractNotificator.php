@@ -54,7 +54,7 @@ abstract class AbstractNotificator implements NotificatorInterface
 
         foreach ($recipients as $recipient) {
             foreach ($templates as $template) {
-                $this->beforeSend($context, $recipient, $template);
+                $this->beforeNotify($context, $recipient, $template);
 
                 try {
                     $notification = $this->builder->build($context, $recipient, $template);
@@ -70,14 +70,14 @@ abstract class AbstractNotificator implements NotificatorInterface
                     continue;
                 }
 
-                $this->afterSend($context, $recipient, $template, $notification);
+                $this->afterNotify($context, $recipient, $template, $notification);
             }
         }
     }
 
-    protected function beforeSend(ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
+    protected function beforeNotify(ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
 
-    protected function afterSend(ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template, NotificationInterface $notification) {}
+    protected function afterNotify(ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template, NotificationInterface $notification) {}
 
     protected function onNotifyException(Throwable $e, NotificationInterface $notification) {}
 
