@@ -9,8 +9,8 @@
          failOnWarning="true"
 >
     <testsuites>
-        <testsuite>
-            <directory suffix="Test.php">./src/Tests</directory>
+        <testsuite name="unit">
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
 
