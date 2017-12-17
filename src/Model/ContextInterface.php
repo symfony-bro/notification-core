@@ -9,5 +9,5 @@ namespace SymfonyBro\NotificationCore\Model;
 
 interface ContextInterface
 {
-    public function getData(): array;
+
 }

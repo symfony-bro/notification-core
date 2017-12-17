@@ -21,20 +21,27 @@ abstract class AbstractNotificator implements NotificatorInterface
     private $templateFinder;
 
     /**
-     * @var SenderInterface
+     * @var NotificationBuilderInterface
      */
-    private $sender;
+    private $builder;
+    /**
+     * @var NotificationManagerInterface
+     */
+    private $manager;
 
     /**
      * AbstractNotificator constructor.
      * @param RecipientFinderInterface $recipientFinder
      * @param TemplateFinderInterface $templateFinder
+     * @param NotificationBuilderInterface $builder
+     * @param NotificationManagerInterface $manager
      */
-    public function __construct(RecipientFinderInterface $recipientFinder, TemplateFinderInterface $templateFinder, SenderInterface $sender)
+    public function __construct(RecipientFinderInterface $recipientFinder, TemplateFinderInterface $templateFinder, NotificationBuilderInterface $builder, NotificationManagerInterface $manager)
     {
         $this->recipientFinder = $recipientFinder;
         $this->templateFinder = $templateFinder;
-        $this->sender = $sender;
+        $this->builder = $builder;
+        $this->manager = $manager;
     }
 
     /**
@@ -50,18 +57,29 @@ abstract class AbstractNotificator implements NotificatorInterface
                 $this->beforeSend($context, $recipient, $template);
 
                 try {
-                    $this->sender->send($context, $recipient, $template);
+                    $notification = $this->builder->build($context, $recipient, $template);
                 } catch (Throwable $e) {
-                    $this->onSendException($e, $context, $recipient, $template);
+                    $this->onBuildException($e, $context, $recipient, $template);
+                    continue;
                 }
-                $this->afterSend($context, $recipient, $template);
+
+                try {
+                    $this->manager->notify($notification);
+                } catch (Throwable $e) {
+                    $this->onNotifyException($e, $notification);
+                    continue;
+                }
+
+                $this->afterSend($context, $recipient, $template, $notification);
             }
         }
     }
 
     protected function beforeSend(ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
 
-    protected function afterSend(ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
+    protected function afterSend(ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template, NotificationInterface $notification) {}
 
-    protected function onSendException(Throwable $e, ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
+    protected function onNotifyException(Throwable $e, NotificationInterface $notification) {}
+
+    private function onBuildException(Throwable $e, ContextInterface $context, RecipientInterface $recipient, TemplateInterface $template) {}
 }
