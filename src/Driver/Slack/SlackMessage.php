@@ -26,6 +26,11 @@ class SlackMessage extends AbstractMessage
     private $payload;
 
     /**
+     * @var bool
+     */
+    private $mrkdwn;
+
+    /**
      * SlackMessage constructor.
      * @param NotificationInterface $notification
      * @param string $token

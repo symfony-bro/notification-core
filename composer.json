@@ -22,5 +22,9 @@
         "psr-4" : {
             "SymfonyBro\\NotificationCore\\" : "src/"
         }
+    },
+    "suggest": {
+        "swiftmailer/swiftmailer ": "Allows using swiftmailer driver",
+        "ext-curl": "Allows using telegram and slack driver"
     }
 }

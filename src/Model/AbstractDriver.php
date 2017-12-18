@@ -1,6 +1,7 @@
 <?php
 namespace SymfonyBro\NotificationCore\Model;
 
+use Exception;
 use SymfonyBro\NotificationCore\Exception\NotificationException;
 
 /**
@@ -12,13 +13,13 @@ abstract class AbstractDriver implements DriverInterface
     /**
      * @param MessageInterface $message
      * @return void
-     * @throws \SymfonyBro\NotificationCore\Exception\NotificationException
+     * @throws NotificationException
      */
     public function send(MessageInterface $message)
     {
         try {
             $this->doSend($message);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new NotificationException($message->getNotification(), $exception->getMessage(), $exception->getCode(), $exception);
         }
     }
