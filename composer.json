@@ -16,7 +16,8 @@
         "php": ">=7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.1"
+        "phpunit/phpunit": "^6.1",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "autoload" : {
         "psr-4" : {
@@ -25,6 +26,7 @@
     },
     "suggest": {
         "swiftmailer/swiftmailer ": "Allows using swiftmailer driver",
-        "ext-curl": "Allows using telegram and slack driver"
+        "ext-curl": "Allows using telegram and slack driver",
+        "guzzlehttp/guzzle": "Allows to use rest driver"
     }
 }
