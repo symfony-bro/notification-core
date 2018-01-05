@@ -9,8 +9,10 @@ namespace SymfonyBro\NotificationCore\Driver\Guzzle;
 
 use GuzzleHttp\ClientInterface;
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
 use SymfonyBro\NotificationCore\Model\AbstractDriver;
 use SymfonyBro\NotificationCore\Model\MessageInterface;
+use Throwable;
 
 abstract class GuzzleDriver extends AbstractDriver
 {
@@ -21,10 +23,11 @@ abstract class GuzzleDriver extends AbstractDriver
 
     /**
      * GuzzleDriver constructor.
+     * @param ClientInterface $client
      */
-    public function __construct()
+    public function __construct(ClientInterface $client)
     {
-        $this->client = $this->createClient();
+        $this->client = $client;
     }
 
     /**
@@ -35,12 +38,27 @@ abstract class GuzzleDriver extends AbstractDriver
     protected function doSend(MessageInterface $message)
     {
         if (!$message instanceof GuzzleMessage) {
-            throw new InvalidArgumentException('GuzzleMesage expected, given '.\get_class($message));
+            throw new InvalidArgumentException('GuzzleMessage expected, given '.\get_class($message));
         }
 
-
-        $this->client->send($message->getRequest());
+        try {
+            $response = $this->client->send($message->getRequest(), ['http_errors' => false]);
+            $this->handleResponse($response);
+        } catch (Throwable $e) {
+            $this->handleException($e, $message);
+        }
     }
 
-    abstract protected function createClient(): ClientInterface;
+    /**
+     * @param ResponseInterface $response
+     * @return void
+     */
+    abstract protected function handleResponse(ResponseInterface $response);
+
+    /**
+     * @param Throwable $exception
+     * @param GuzzleMessage $message
+     * @return void
+     */
+    abstract protected function handleException(Throwable $exception, GuzzleMessage $message);
 }

@@ -21,12 +21,13 @@
     },
     "autoload" : {
         "psr-4" : {
-            "SymfonyBro\\NotificationCore\\" : "src/"
+            "SymfonyBro\\NotificationCore\\" : "src/",
+            "SymfonyBro\\NotificationCore\\Tests\\" : "tests/"
         }
     },
     "suggest": {
         "swiftmailer/swiftmailer ": "Allows using swiftmailer driver",
         "ext-curl": "Allows using telegram and slack driver",
-        "guzzlehttp/guzzle": "Allows to use rest driver"
+        "guzzlehttp/guzzle": "Allows to use guzzle driver"
     }
 }
