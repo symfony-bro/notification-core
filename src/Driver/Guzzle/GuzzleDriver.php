@@ -43,7 +43,7 @@ abstract class GuzzleDriver extends AbstractDriver
 
         try {
             $response = $this->client->send($message->getRequest(), ['http_errors' => false]);
-            $this->handleResponse($response);
+            $this->handleResponse($response, $message);
         } catch (Throwable $e) {
             $this->handleException($e, $message);
         }
@@ -53,7 +53,7 @@ abstract class GuzzleDriver extends AbstractDriver
      * @param ResponseInterface $response
      * @return void
      */
-    abstract protected function handleResponse(ResponseInterface $response);
+    abstract protected function handleResponse(ResponseInterface $response, MessageInterface $message);
 
     /**
      * @param Throwable $exception

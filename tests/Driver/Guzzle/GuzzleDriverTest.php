@@ -48,7 +48,7 @@ class GuzzleDriverTest extends TestCase
 
         $driver->expects($this->once())
             ->method('handleResponse')
-            ->with($response);
+            ->with($response, $message);
 
         $driver->send($message);
     }
