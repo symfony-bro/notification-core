@@ -2,6 +2,7 @@
 namespace SymfonyBro\NotificationCore\Driver\Telegram;
 
 
+use InvalidArgumentException;
 use SymfonyBro\NotificationCore\Model\AbstractDriver;
 use SymfonyBro\NotificationCore\Model\MessageInterface;
 
@@ -27,14 +28,13 @@ class TelegramDriver extends AbstractDriver
 
     /**
      * @param MessageInterface|TelegramMessage $message
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function doSend(MessageInterface $message)
     {
-        $result = $this->client->call($message->getToken(), $message->getMethod(), $message->getMessage(), $message->getTimeout());
+        $result = $this->client->call($message->getMethod(), $message->getMessage());
         if (!$result['ok']) {
-            throw new \InvalidArgumentException($result['error'] ?? 'Unknown error occurred.');
+            throw new InvalidArgumentException($result['error'] ?? 'Unknown error occurred.');
         }
     }
-
 }

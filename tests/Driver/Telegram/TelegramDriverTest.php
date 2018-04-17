@@ -16,19 +16,21 @@ class TelegramDriverTest extends TestCase
 {
     public function testSend()
     {
+        /** @var NotificationInterface $notification */
         $notification = $this->getMockForAbstractClass(NotificationInterface::class);
-        $message = new TelegramMessage($notification, 'token', 'getMe');
-        $message->setMessage([]);
+        $message = new TelegramMessage($notification, 'sendMessage');
+        $message->setMessage([
+            'text' => 'roses are red violets are blue '.(new \DateTime())->format('d.m.Y H:i:s'),
+            'parse_mode' => 'HTML',
+            'chat_id' => '15967042',
+        ]);
 
-        $client = $this->getMockBuilder(TelegramClient::class)
-            ->getMock();
-        $client->expects($this->once())
-            ->method('call')
-            ->with('token', 'getMe', [])
-            ->willReturn(['ok' => true]);
-
+        $client = new TelegramClient('346041864:AAGFDQYhEWtEqsmqAOnswHxZ4_zOcJTTn04', [
+            'proxy' => 'socks5h://gs:gs@195.123.226.65:28888',
+        ]);
         $driver = new TelegramDriver($client);
 
         $driver->send($message);
+        $this->assertTrue(true);
     }
 }

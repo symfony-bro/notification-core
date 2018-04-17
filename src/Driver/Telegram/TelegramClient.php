@@ -7,6 +7,9 @@
 
 namespace SymfonyBro\NotificationCore\Driver\Telegram;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+
 /**
  * Class TelegramClient
  * @package SymfonyBro\NotificationCore\Driver\Telegram
@@ -16,50 +19,63 @@ class TelegramClient
     /**
      * @var string
      */
-    private $endpoint;
+    private $baseUri;
+    /**
+     * @var string
+     */
+    private $pattern;
+    /**
+     * @var array
+     */
+    private $options;
+    /**
+     * @var string
+     */
+    private $token;
 
     /**
      * TelegramClient constructor.
-     * @param string $endpoint
+     * @param string $token
+     * @param array $options
+     * @param string $baseUri
+     * @param string $pattern
      */
-    public function __construct($endpoint = 'https://api.telegram.org/bot<token>/<method>')
+    public function __construct(string $token, array $options = [], $baseUri = 'https://api.telegram.org', $pattern = '/bot<token>/<method>')
     {
-        $this->endpoint = $endpoint;
+        $this->token = $token;
+        $this->options = $options;
+        $this->baseUri = $baseUri;
+        $this->pattern = $pattern;
     }
 
     /**
-     * @param $token
-     * @param $method
-     * @param array $args
+     * @param string $method
+     * @param array $data
      * @param int $timeout
      * @return bool|mixed
      */
-    public function call($token, $method, array $args = [], $timeout = 10)
+    public function call(string $method, array $data, int $timeout = 10)
     {
-        $url = str_replace(['<method>', '<token>'], [$method, $token], $this->endpoint);
+        $url = str_replace(['<method>', '<token>'], [$method, $this->token], $this->pattern);
 
-        if (function_exists('curl_version')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
-            $result = curl_exec($ch);
-            curl_close($ch);
-        } else {
-            $post_data = http_build_query($args);
-            $result = file_get_contents($url, false, stream_context_create([
-                'http' => [
-                    'protocol_version' => 1.1,
-                    'method' => 'POST',
-                    'header' => "Content-type: application/x-www-form-urlencoded\r\n" .
-                        'Content-length: ' . strlen($post_data) . "\r\n" .
-                        "Connection: close\r\n",
-                    'content' => $post_data
-                ],
-            ]));
+        $post_data = http_build_query($data);
+        $client = new Client(array_merge([
+            'headers' => [
+                'Content-type' => 'application/x-www-form-urlencoded',
+                'Content-length' => \strlen($post_data),
+                'Connection' => 'close',
+            ],
+            'base_uri' => $this->baseUri,
+            'timeout' => $timeout,
+        ], $this->options));
+        try {
+            $response = $client->request('POST', $url, [
+                'body' => $post_data,
+            ]);
+        } catch (GuzzleException $e) {
+            return false;
         }
-        return $result ? json_decode($result, true) : false;
+
+        return $response->getStatusCode() === 200 ? json_decode($response->getBody(), true): false;
     }
 }

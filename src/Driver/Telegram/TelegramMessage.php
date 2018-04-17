@@ -17,26 +17,19 @@ class TelegramMessage extends AbstractMessage
     private $method;
 
     /**
-     * @var string
-     */
-    private $token;
-
-    /**
-     * @var int
-     */
-    private $timeout;
-
-    /**
      * @var array
      */
     private $message;
 
-    public function __construct(NotificationInterface $notification, string $token, $method = 'getMe', $timeout = 10)
+    /**
+     * TelegramMessage constructor.
+     * @param NotificationInterface $notification
+     * @param string $method
+     */
+    public function __construct(NotificationInterface $notification, string $method = 'sendMessage')
     {
         parent::__construct($notification);
         $this->method = $method;
-        $this->timeout = $timeout;
-        $this->token = $token;
     }
 
     /**
@@ -45,22 +38,6 @@ class TelegramMessage extends AbstractMessage
     public function getMethod(): string
     {
         return $this->method;
-    }
-
-    /**
-     * @return string
-     */
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimeout(): int
-    {
-        return $this->timeout;
     }
 
     /**
