@@ -6,9 +6,9 @@
 
 namespace SymfonyBro\NotificationCore\Driver\Firebase;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 interface ClientBuilderInterface
 {
-    public function build(): Client;
+    public function build(): ClientInterface;
 }

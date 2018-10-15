@@ -7,7 +7,7 @@
 namespace SymfonyBro\NotificationCore\Driver\Firebase;
 
 
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 class InMemoryCachedClientBuilder implements ClientBuilderInterface
 {
@@ -17,7 +17,7 @@ class InMemoryCachedClientBuilder implements ClientBuilderInterface
     private $origin;
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
     private $client;
 
@@ -26,7 +26,7 @@ class InMemoryCachedClientBuilder implements ClientBuilderInterface
         $this->origin = $origin;
     }
 
-    public function build(): Client
+    public function build(): ClientInterface
     {
         if (null === $this->client) {
             $this->client = $this->origin->build();

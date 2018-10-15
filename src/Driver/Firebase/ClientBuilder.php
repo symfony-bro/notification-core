@@ -8,6 +8,8 @@ namespace SymfonyBro\NotificationCore\Driver\Firebase;
 
 use Google_Client;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\HandlerStack;
 
 class ClientBuilder implements ClientBuilderInterface
 {
@@ -21,11 +23,17 @@ class ClientBuilder implements ClientBuilderInterface
         $this->config = $config;
     }
 
-    public function build(): Client
+    public function build(): ClientInterface
     {
         $client = new Google_Client();
         $client->setAuthConfig($this->config);
         $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-        return $client->authorize();
+        return $client->authorize(
+            new Client(
+                [
+                    'handlers' => HandlerStack::create()
+                ]
+            )
+        );
     }
 }
